@@ -15,7 +15,12 @@
 
         <!-- I believe request.form['title'] is present, as it is in create.html, because
              if the form is submitted incorrectly and the page reloads, the value will still
-             be there, stored in request.form -->
+             be there, stored in request.form
+             
+             post is there because when the page first loads, the user's post information will be there. cool.
+        -->
+
+        <!-- 'request is another variable that is automatically available in templates' -->
 
         <input name="title" id="title" value="{{ request.form['title'] or post['title'] }}" required="required">
 
@@ -26,7 +31,8 @@
     </form>
 
     <hr>
-
+    
+    <!-- a very simple delete form directed to the delete URL for this blog post id -->
     <form action="{{ url_for('blog.delete', id=post['id]) }}" method="post">
         <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
     </form>
