@@ -75,7 +75,7 @@ def get_post(id, check_author=True):
 # real url:    /1/update
 # flask captures the 1, makes sure it's an int, passes it to the id argument.
 # by not specifying int, it will be a string.
-@bp.route('/<int:id>/update', methods('GET', 'POST'))
+@bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
     post = get_post(id)
@@ -94,7 +94,7 @@ def update(id):
             flash(error)
         else:
             db = get_db()
-            db.execute(UPDATE post SET title = ?, body = ? WHERE id = ?, (title, body, id))
+            db.execute("UPDATE post SET title = ?, body = ? WHERE id = ?", (title, body, id))
             db.commit()
             return redirect(url_for('blog.index'))
 
@@ -104,4 +104,12 @@ def update(id):
 #     url_for('blogupdate', id=post['id'])
 # - see this in index.html 
 
+@bp.route('/<int:id>/delete', methods=('POST',))
+@login_required
+def delete(id):
+    get_post(id)
+    db = get_db()
+    db.execute('DELETE FROM post WHERE id = ?', (id,))
+    db.commit()
+    return redirect(url_for('blog.index'))
 
