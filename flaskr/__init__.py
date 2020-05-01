@@ -33,5 +33,12 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+    
+    from . import blog
+    app.register_blueprint(blog.bp)
+    # by default, the index view defined in blog.py is available at blog.index
+    # app.add_url_rule associates the endpoint name 'index' with the '/' url, such that ...
+    # url_for('blog.index') and url_for('index') both generate '/'
+    app.add_url_rule('/', endpoint='index') 
 
     return app
