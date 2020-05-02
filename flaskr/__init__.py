@@ -7,8 +7,8 @@ import os
 from flask import Flask
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    print("name: " + __name__)
+    application = Flask(__name__, instance_relative_config=True)
+    app = application
     app.config.from_mapping(
             SECRET_KEY='dev',
             DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
@@ -28,17 +28,20 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
-    from . import db
-    db.init_app(app)
+    import flaskr.db
+    flaskr.db.init_app(app)
 
-    from . import auth
-    app.register_blueprint(auth.bp)
+    import flaskr.auth
+    app.register_blueprint(flaskr.auth.bp)
     
-    from . import blog
-    app.register_blueprint(blog.bp)
+    import flaskr.blog
+    app.register_blueprint(flaskr.blog.bp)
     # by default, the index view defined in blog.py is available at blog.index
     # app.add_url_rule associates the endpoint name 'index' with the '/' url, such that ...
     # url_for('blog.index') and url_for('index') both generate '/'
     app.add_url_rule('/', endpoint='index') 
 
-    return app
+    return application
+
+application = create_app()
+
